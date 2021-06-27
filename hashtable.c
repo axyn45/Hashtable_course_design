@@ -4,7 +4,7 @@
 #include <math.h>       //新增的math头文件
 #include "hashtable.h"
 
-#define MAX_BUCKETS 100     //从100改到了1000
+#define MAX_BUCKETS 1000     //从100改到了1000
 #define MULTIPLIER 31
 
 #define LENGTH 30
@@ -65,7 +65,7 @@ static PNode find(PNode wp , const char *str)
 /*将在散列表中查找相应节点，并进行相应操作，找到返回指针，没找到则创建节点并加入散列表,并返回指针*/
 static PNode lookup(const char *str)
 {
-    
+
 }
 
 /*删除散列表*/
