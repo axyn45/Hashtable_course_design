@@ -65,7 +65,19 @@ static PNode find(PNode wp , const char *str)
 /*将在散列表中查找相应节点，并进行相应操作，找到返回指针，没找到则创建节点并加入散列表,并返回指针*/
 static PNode lookup(const char *str)
 {
-
+    PNode cur=table[hashstring(str)]->next;
+    while(cur->next){
+        if(strcmp(cur->data.name,str)){
+            return cur;
+        }
+        cur=cur->next;
+    }
+    if(strcmp(cur->data.name,str))
+        return cur;
+    else{
+        cur->next=walloc(str);
+    }
+    return cur->next;
 }
 
 /*删除散列表*/
