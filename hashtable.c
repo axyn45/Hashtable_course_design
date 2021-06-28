@@ -88,8 +88,8 @@ static void cleartable()
 void file_read_ht()
 {
     FILE *fp = fopen("user_login.txt", "r");
-    char word[1024];
-    char *name;
+    char word[1024];        //存储姓名
+    char *name;             //结构体
     PNode wp = NULL;
 
     memset(table, 0, sizeof(table));
@@ -101,7 +101,18 @@ void file_read_ht()
         name = strtok(word, ",");
         ////begin
         //加入散列表，2条语句实现
-
+        wp=table[hashstring(name)]->next;
+        while(wp!=NULL||((&wp==&table[hashstring(name)]->next)&&wp==NULL))
+            if((&wp==&table[hashstring(name)]->next)&&wp==NULL){
+                wp=walloc(name);
+                wp=wp->next;
+            }
+            else if(wp->next==NULL){
+                wp->next=walloc(name);
+                wp=wp->next->next;
+            }
+            else
+                wp=wp->next;
         ////end
  
         count++;
