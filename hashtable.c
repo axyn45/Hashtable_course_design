@@ -154,9 +154,9 @@ void file_write_ht()
 /*搜索功能*/
 void search_ht()
 {
-    char name[LENGTH]; 
+    char name[LENGTH];
     printf("Enter name, 'q' to exit：\n");
-    scanf("%s", name);    
+    scanf("%s", name);
      
     while (strcmp(name, "q")) {
         unsigned long hash = hashstring(name);
@@ -164,8 +164,8 @@ void search_ht()
         PNode curr = NULL;
 
         ////begin
-
-
+        
+        
         ////end
 
         scanf("%s", name);
