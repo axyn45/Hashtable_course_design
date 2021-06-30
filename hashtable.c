@@ -56,7 +56,7 @@ static PNode find(PNode wp , const char *str)
 {
     PNode cur=wp;
     while(cur){
-        if(strcmp(cur->data.name,str))
+        if(strcmp(cur->data.name,str)==0)
             return cur;
     }
     return NULL;
@@ -67,17 +67,17 @@ static PNode lookup(const char *str)
 {
     PNode cur=table[hashstring(str)]->next;
     while(cur->next){
-        if(strcmp(cur->data.name,str)){
+        if(strcmp(cur->data.name,str)==0){
             return cur;
         }
         cur=cur->next;
     }
-    if(strcmp(cur->data.name,str))
+    if(strcmp(cur->data.name,str)==0)
         return cur;
     else{
         cur->next=walloc(str);
+        return cur->next;
     }
-    return cur->next;
 }
 
 /*删除散列表*/
@@ -114,17 +114,25 @@ void file_read_ht()
         ////begin
         //加入散列表，2条语句实现
         wp=table[hashstring(name)]->next;
-        while(wp!=NULL||((&wp==&table[hashstring(name)]->next)&&wp==NULL))
-            if((&wp==&table[hashstring(name)]->next)&&wp==NULL){
-                wp=walloc(name);
-                wp=wp->next;
+        while(1){
+            if(strcmp(name,wp->data.name)==0){
+                wp->data.totalcount++;
+                break;
             }
             else if(wp->next==NULL){
-                wp->next=walloc(name);
-                wp=wp->next->next;
+                if(strcmp(name,wp->data.name)==0){
+                    wp->data.totalcount++;
+                    break;
+                }
+                else{
+                    wp->next=walloc(name);
+                    wp->next->data.totalcount++;
+                    break;
+                }
             }
             else
                 wp=wp->next;
+        }
         ////end
  
         count++;
@@ -145,8 +153,16 @@ void file_write_ht()
     }
 
     ////begin
-
-
+    int i=0;
+    PNode cur;
+    while(i<MAX_BUCKETS){
+        cur=table[i]->next;
+        while(cur){
+            fwrite(fp,"%s, %d\n",cur->data.name,cur->data.totalcount);
+            cur=cur->next;
+        }
+        i++;
+    }
     ////end
     printf("%d\n", count);   
 }
@@ -164,8 +180,18 @@ void search_ht()
         PNode curr = NULL;
 
         ////begin
-        
-        
+        curr=wp->next;
+        while(1){
+            if(curr==NULL)
+                break;
+            else if(strcmp(curr->data.name,name)==0){
+                printf("name:%s\ntotalcount = %d\n",name,curr->data.totalcount);
+                break;
+            }
+            else
+                curr=curr->next;
+            
+        }
         ////end
 
         scanf("%s", name);
