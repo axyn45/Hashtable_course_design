@@ -122,26 +122,8 @@ void file_read_ht()
         name = strtok(word, ",");
         ////begin
         //加入散列表，2条语句实现
-        wp=table[hashstring(name)]->next;
-        while(1){
-            if(strcmp(name,wp->data.name)==0){
-                wp->data.totalcount++;
-                break;
-            }
-            else if(wp->next==NULL){
-                if(strcmp(name,wp->data.name)==0){
-                    wp->data.totalcount++;
-                    break;
-                }
-                else{
-                    wp->next=walloc(name);
-                    wp->next->data.totalcount++;
-                    break;
-                }
-            }
-            else
-                wp=wp->next;
-        }
+        wp = lookup(name);
+        wp->data.totalcount++;
         ////end
  
         count++;
