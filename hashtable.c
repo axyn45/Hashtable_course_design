@@ -1,35 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>       //新增的math头文件
 #include "hashtable.h"
 
-#define MAX_BUCKETS 1000     //从100改到了1000
+#define MAX_BUCKETS 1000     //根据作业要求，已将从100改成了1000
 #define MULTIPLIER 31
 
 #define LENGTH 30
-typedef struct User_login{
-   char name[LENGTH];  
-   int totalcount;
+typedef struct User_login {
+    char name[LENGTH];
+    int totalcount;
 }ELementType;                 //链表的节点
 
 typedef struct SListNode
 {
- ELementType data;
- struct SListNode* next;
-}Node, *PNode, *List;              //封装链表节点和next指针
+    ELementType data;
+    struct SListNode* next;
+}Node, * PNode, * List;              //封装链表节点和next指针
 
 
 static PNode table[MAX_BUCKETS];
 
-static unsigned long hashstring(const char *str);
+static unsigned long hashstring(const char* str);
 static void cleartable();
-static PNode walloc(const char *str);
-static PNode lookup(const char *str);
-static PNode find(PNode wp , const char *str);
+static PNode walloc(const char* str);
+static PNode lookup(const char* str);
+static PNode find(PNode wp, const char* str);
 
 /*创建一个节点*/
-static PNode walloc(const char *str)
+static PNode walloc(const char* str)
 {
     PNode p = (PNode)malloc(sizeof(Node));
     if (p != NULL) {
@@ -41,29 +40,31 @@ static PNode walloc(const char *str)
 }
 
 /*计算哈希值*/
-static unsigned long hashstring(const char *str)
+static unsigned long hashstring(const char* str)
 {
-    int sum=0;
-    int i;
-    for(i=0;str[i]!=0;i++){
-        sum+=str[i]*pow(MULTIPLIER,str[i]);     //pow包含在math中
+    unsigned long hash = 0;
+    while (*str)
+    {
+        hash = hash * MULTIPLIER + *str;
+        str++;
     }
-    return sum%MAX_BUCKETS;
+    return hash % MAX_BUCKETS;
 }
 
 /*在一个链表中查找人名，找到返回指针，找不到返回NULL*/
-static PNode find(PNode wp , const char *str)
+static PNode find(PNode wp, const char* str)
 {
-    PNode cur=wp;
-    while(cur){
-        if(strcmp(cur->data.name,str)==0)
+    PNode cur = wp;
+    while (cur) {
+        if (strcmp(cur->data.name, str) == 0)
             return cur;
+        cur = cur->next;
     }
     return NULL;
 }
 
 /*将在散列表中查找相应节点，并进行相应操作，找到返回指针，没找到则创建节点并加入散列表,并返回指针*/
-static PNode lookup(const char *str)
+static PNode lookup(const char* str)
 {
     unsigned long hash = hashstring(str);
     PNode cur = find(table[hash], str);
@@ -108,9 +109,9 @@ static void cleartable()
 /*读取文件，创建散列表*/
 void file_read_ht()
 {
-    FILE *fp = fopen("user_login.txt", "r");
+    FILE* fp = fopen("user_login.txt", "r");
     char word[1024];        //存储姓名
-    char *name;             //结构体
+    char* name;             //结构体
     PNode wp = NULL;
 
     memset(table, 0, sizeof(table));
@@ -122,10 +123,11 @@ void file_read_ht()
         name = strtok(word, ",");
         ////begin
         //加入散列表，2条语句实现
+        //wp = table[hashstring(name)];
         wp = lookup(name);
         wp->data.totalcount++;
         ////end
- 
+
         count++;
     }
     printf("%d \n", count);
@@ -135,12 +137,12 @@ void file_read_ht()
 /*将散列表写入文件*/
 void file_write_ht()
 {
-    FILE *fp;
+    FILE* fp;
     int count = 0;
 
-    if((fp=fopen("output.txt","wt")) == NULL ) {
-        printf("Fail to open file!\n");    
-        exit(0);  
+    if ((fp = fopen("output.txt", "wt")) == NULL) {
+        printf("Fail to open file!\n");
+        exit(0);
     }
 
     ////begin
@@ -159,7 +161,7 @@ void file_write_ht()
         i++;
     }
     ////end
-    printf("%d\n", count);   
+    printf("%d\n", count);
 }
 
 /*搜索功能*/
@@ -168,7 +170,7 @@ void search_ht()
     char name[LENGTH];
     printf("Enter name, 'q' to exit：\n");
     scanf("%s", name);
-     
+
     while (strcmp(name, "q")) {
         unsigned long hash = hashstring(name);
         PNode wp = table[hash];
@@ -185,9 +187,9 @@ void search_ht()
         ////end
 
         scanf("%s", name);
-    }    
+    }
 
-    cleartable();     
+    cleartable();
 }
 
 
