@@ -169,7 +169,7 @@ void file_write_ht()
 void search_ht()
 {
     char name[LENGTH];
-    printf("Enter name, 'q' to exit：\n");
+    printf("Enter name, 'q' to exit: \n");
     scanf("%s", name);
 
     while (strcmp(name, "q")) {
