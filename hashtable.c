@@ -80,8 +80,6 @@ static PNode lookup(const char* str)
             return table[hash]->next;
         }
         while (cur->next) {
-            if (strcmp(cur->data.name, str) == 0)
-                return cur;
             cur = cur->next;
         }
         if (strcmp(cur->data.name, str) == 0)
