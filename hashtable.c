@@ -65,18 +65,27 @@ static PNode find(PNode wp , const char *str)
 /*将在散列表中查找相应节点，并进行相应操作，找到返回指针，没找到则创建节点并加入散列表,并返回指针*/
 static PNode lookup(const char *str)
 {
-    PNode cur=table[hashstring(str)]->next;
-    while(cur->next){
-        if(strcmp(cur->data.name,str)==0){
-            return cur;
-        }
-        cur=cur->next;
-    }
-    if(strcmp(cur->data.name,str)==0)
+    unsigned long hash = hashstring(str);
+    PNode cur = find(table[hash], str);
+    if (cur) {
         return cur;
-    else{
-        cur->next=walloc(str);
-        return cur->next;
+    }
+    else {
+        cur = table[hash];
+        if (cur == NULL) {
+            table[hash] = walloc("/head");
+            table[hash]->next = walloc(str);
+            return table[hash]->next;
+        }
+        while (cur->next) {
+            if (strcmp(cur->data.name, str) == 0)
+                return cur;
+            cur = cur->next;
+        }
+        if (strcmp(cur->data.name, str) == 0)
+            return cur;
+        else
+            return cur->next = walloc(str);
     }
 }
 
