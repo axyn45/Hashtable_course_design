@@ -42,13 +42,14 @@ static PNode walloc(const char* str)
 /*计算哈希值*/
 static unsigned long hashstring(const char* str)
 {
-    unsigned long hash = 0;
-    while (*str)
+    unsigned long hash = 0;                 //hash保存哈希值
+    while (*str)                            //循环计算hash值        
     {
-        hash = hash * MULTIPLIER + *str;
+        hash = hash * MULTIPLIER + *str;    //
         str++;
     }
-    return hash % MAX_BUCKETS;
+    hash = hash % MAX_BUCKETS;              //对MAX_BUCKETS求余得到最终hash值
+    return hash;
 }
 
 /*在一个链表中查找人名，找到返回指针，找不到返回NULL*/
@@ -56,9 +57,9 @@ static PNode find(PNode wp, const char* str)
 {
     PNode cur = wp;
     while (cur) {
-        if (strcmp(cur->data.name, str) == 0)
-            return cur;
-        cur = cur->next;
+        if (strcmp(cur->data.name, str) == 0)   
+            return cur;                         //如果找到则返回节点
+        cur = cur->next;                        //继续遍历下一个节点
     }
     return NULL;
 }
@@ -67,15 +68,15 @@ static PNode find(PNode wp, const char* str)
 static PNode lookup(const char* str)
 {
     unsigned long hash = hashstring(str);
-    PNode cur = find(table[hash], str);
+    PNode cur = find(table[hash], str);             
     if (cur) {
-        return cur;
+        return cur;             //如果find()找到目标节点则直接返回该节点地址
     }
     else {
         cur = table[hash];
         if (cur == NULL) {
-            table[hash] = walloc("/head");
-            table[hash]->next = walloc(str);
+            table[hash] = walloc("/head");      //创建头节点
+            table[hash]->next = walloc(str);    //头节点后新建数据节点
             return table[hash]->next;
         }
         while (cur->next) {
@@ -84,9 +85,9 @@ static PNode lookup(const char* str)
             cur = cur->next;
         }
         if (strcmp(cur->data.name, str) == 0)
-            return cur;
+            return cur;                         //如果最后一个节点匹配则返回该节点地址
         else
-            return cur->next = walloc(str);
+            return cur->next = walloc(str);     //如果没有节点匹配则新建数据节点并将其地址返回
     }
 }
 
@@ -124,8 +125,8 @@ void file_read_ht()
         ////begin
         //加入散列表，2条语句实现
         //wp = table[hashstring(name)];
-        wp = lookup(name);
-        wp->data.totalcount++;
+        wp = lookup(name);          //临时节点wp接收lookup返回值
+        wp->data.totalcount++;      //将wp指向的数据中的登录次数加一
         ////end
 
         count++;
@@ -151,12 +152,12 @@ void file_write_ht()
     while (i < MAX_BUCKETS) {
         if (table[i] == NULL) {
             i++;
-            continue;
+            continue;               //如果当前散列表元素指向空则跳过此次循环，i自增1
         }
         cur = table[i]->next;
         while (cur) {
-            fprintf(fp, "%s, %d\n", cur->data.name, cur->data.totalcount);
-            count++;
+            fprintf(fp, "%s, %d\n", cur->data.name, cur->data.totalcount);      //将节点数据写入output.txt
+            count++;                //统计元素count自增1
             cur = cur->next;
         }
         i++;
@@ -180,10 +181,10 @@ void search_ht()
         ////begin
         curr = find(wp, name);
         if (curr) {
-            printf("name:%s\ntotalcount = %d\n", name, curr->data.totalcount);
+            printf("name:%s\ntotalcount = %d\n", name, curr->data.totalcount);      //如果找到该人名的记录则输出其登录信息
         }
         else {
-            printf("Not found!\n");
+            printf("Not found!\n");             ////如果没找到该人名的记录则提示没找到
         }
         ////end
 
