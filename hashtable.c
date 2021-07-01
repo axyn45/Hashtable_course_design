@@ -144,13 +144,17 @@ void file_write_ht()
     }
 
     ////begin
-    int i=0;
+    int i = 0;
     PNode cur;
-    while(i<MAX_BUCKETS){
-        cur=table[i]->next;
-        while(cur){
-            fwrite(fp,"%s, %d\n",cur->data.name,cur->data.totalcount);
-            cur=cur->next;
+    while (i < MAX_BUCKETS) {
+        if (table[i] == NULL) {
+            i++;
+            continue;
+        }
+        cur = table[i]->next;
+        while (cur) {
+            fprintf(fp, "%s, %d\n", cur->data.name, cur->data.totalcount);
+            cur = cur->next;
         }
         i++;
     }
@@ -171,17 +175,12 @@ void search_ht()
         PNode curr = NULL;
 
         ////begin
-        curr=wp->next;
-        while(1){
-            if(curr==NULL)
-                break;
-            else if(strcmp(curr->data.name,name)==0){
-                printf("name:%s\ntotalcount = %d\n",name,curr->data.totalcount);
-                break;
-            }
-            else
-                curr=curr->next;
-            
+        curr = find(wp, name);
+        if (curr) {
+            printf("name:%s\ntotalcount = %d\n", name, curr->data.totalcount);
+        }
+        else {
+            printf("Not found!\n");
         }
         ////end
 
