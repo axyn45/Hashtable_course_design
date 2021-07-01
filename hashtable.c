@@ -156,6 +156,7 @@ void file_write_ht()
         cur = table[i]->next;
         while (cur) {
             fprintf(fp, "%s, %d\n", cur->data.name, cur->data.totalcount);
+            count++;
             cur = cur->next;
         }
         i++;
